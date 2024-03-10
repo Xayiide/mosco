@@ -7,4 +7,11 @@ Implementación de un broker MQTT, inspirado en [Sol](https://github.com/codepr/
 
 
 # Compilar
+En el directorio `mosco`:  
+## Sin Eclipse
 `mkdir -p build && cd build && cmake .. && make`
+## Con Eclipse
+En el directorio mosco:  
+`mkdir -p build`
+`cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE -DCMAKE_ECLIPSE_MAKE_ARGUMENTS=-j12 .`  
+Luego hay que importar el proyecto: `File > Import > Existing Projects into Workspace`
