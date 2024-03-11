@@ -181,7 +181,7 @@ struct mqtt_packet {
     };
 };
 
-i32 mqtt_encode_length();
+i32 mqtt_encode_length(u8 *buf, size_t len);
 
 
 #endif /* MQTT_H_ */
