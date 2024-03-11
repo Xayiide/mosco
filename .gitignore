@@ -73,3 +73,6 @@ _deps
 .project
 .settings
 .cproject
+
+# Vim
+*.swp

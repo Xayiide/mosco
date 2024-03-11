@@ -183,5 +183,6 @@ struct mqtt_packet {
 
 i32 mqtt_encode_length(u8 *buf, size_t len);
 
+i32 mqtt_decode_length(u8 *buf);
 
 #endif /* MQTT_H_ */
