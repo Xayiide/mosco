@@ -51,6 +51,8 @@ union mqtt_header
  *   · Password
  */
 struct mqtt_connect {
+    union mqtt_header header;
+    /* protocol name y level tienen valores estáticos */
     union {
         u8 byte;
         struct {
@@ -62,7 +64,7 @@ struct mqtt_connect {
             u8 password      : 1;
             u8 username      : 1;
         } bits;
-    }; /* Flags */
+    } flags; /* Flags */
     u16 keepalive;
     struct {
         u8  *client_id;
@@ -79,13 +81,14 @@ struct mqtt_connect {
  *   · Return code (1 B)
  */
 struct mqtt_connack {
+    union mqtt_header header;
     union {
         u8 byte;
         struct {
             u8 session_present : 1;
             u8 reserved        : 7;
         } bits;
-    }; /* Flags */
+    } flags; /* Flags */
     u8 rc;  /* return code */
 };
 
@@ -96,6 +99,8 @@ struct mqtt_connack {
  * - Datos (los datos que sean)
  */
 struct mqtt_pub {
+    union mqtt_header header;
+    u16  pkt_id;
     u16  topic_len;
     u8  *topic;
     u16  data_len;
@@ -113,6 +118,7 @@ struct mqtt_pub {
  *   · Topic 2 ...
  */
 struct mqtt_sub {
+    union mqtt_header header;
     u16 pkt_id;
     u16 tuples_len;
     struct {
@@ -129,6 +135,7 @@ struct mqtt_sub {
  *   · Lista de RCs: 1 RC de 1 B por TF del SUB
  */
 struct mqtt_suback {
+    union mqtt_header header;
     u16  packet_id;
     u16  rcs_len;
     u8  *rcs;
@@ -144,6 +151,7 @@ struct mqtt_suback {
  *   · Topic 2 ...
  */
 struct mqtt_unsub {
+    union mqtt_header header;
     u16 packet_id;
     u16 tuples_len;
     struct {
@@ -153,6 +161,7 @@ struct mqtt_unsub {
 };
 
 struct mqtt_ack {
+    union mqtt_header header;
     u16 packet_id;
 };
 
@@ -167,6 +176,19 @@ typedef union mqtt_header mqtt_pingreq;
 typedef union mqtt_header mqtt_pingresp;
 typedef union mqtt_header mqtt_disconnect;
 
+
+union mqtt_packet {
+    struct mqtt_ack    ack;
+    union  mqtt_header header;
+    struct mqtt_connect connect;
+    struct mqtt_connack connack;
+    struct mqtt_suback  suback;
+    struct mqtt_pub     pub;
+    struct mqtt_sub     sub;
+    struct mqtt_unsub   unsub;
+};
+
+#if 0
 struct mqtt_packet {
     union mqtt_header header;
     union {
@@ -180,9 +202,9 @@ struct mqtt_packet {
         struct mqtt_unsub   unsub;
     };
 };
+#endif
 
 i32 mqtt_encode_length(u8 *buf, size_t len);
-
 i32 mqtt_decode_length(u8 *buf);
 
 #endif /* MQTT_H_ */
